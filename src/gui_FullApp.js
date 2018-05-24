@@ -78,7 +78,6 @@
 			this.submitFeedback = new namespace.submitFeedback(this);
 			
 			this.urlHistory = new namespace.urlHistory(this);
-			this.googleAnalytics = new namespace.googleAnalytics(this); 
 			
 			var t = this;
 			$('.addDocumentToolbarButton0fileOpen').bind('mouseenter.moveto', function() {
