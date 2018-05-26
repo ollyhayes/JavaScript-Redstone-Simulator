@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html> 
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+		<title>Javascript Redstone Simulator</title> 
+		<meta name="keywords" content=""> 
+		<meta name="description" content="An in-browser, Javascript redstone simulator. Inspired by Baezon's simulator." /> 
+		<link rel="stylesheet" href="css/guiFull.css" />
+		<script>
+			function redirectIfNoHistoryApiSupport(schematicIdToOpen) {
+				if (schematicIdToOpen == null || typeof schematicIdToOpen == "undefined") {
+					return;
+				}
+				
+				if (!!window.HTMLCanvasElement && !(window.history && history.pushState)) {
+					window.location.href = "./#" + schematicIdToOpen;
+				}
+			}
+
+			var schematicIdToOpen = null;
+			redirectIfNoHistoryApiSupport(schematicIdToOpen);
+			
+			var schematicMetadata = {"error":true,"runningOnLive":true,"errorDescription":"No record found with ID null. (1)"};
+			var userManager_cookieCheckResponse = {"error":false,"authenticated":false};
+		</script>
+
+		<script src="js/defaultOptions.js"></script> 
+
+		<script src="js/jquery/jquery-1.7.1.min.js"></script> 
+		<script src="js/jquery/jquery-ui-1.8.17.custom.min.js"></script> 
+		<script src="js/jquery/jquery.mousewheel.min.js"></script>
+		<script src="js/jquery/jquery.form.js"></script>
+		<script src="js/jquery/jquery.disableTextSelect.js"></script>
+		<script src="js/jquery/jquery.ba-hashchange.min.js"></script>
+
+		<script src="src/setNamespace.js"></script>
+
+		<script src="JsNbtParser/binary-parser.js"></script>
+		<script src="JsNbtParser/NbtParser.js"></script>
+		<!--<script src="JsNbtParser/deflate.js"></script>-->
+		<!--<script src="JsNbtParser/inflate.js"></script>-->
+		<script src="JsNbtParser/gzip.js"></script>
+
+		<script src="JsNbtParser/World_Schematic.js"></script>
+
+		<script src="js/sprintf-0.7-beta1.js"></script>
+
+
+		<script src="src/World_Level.js"></script>
+
+
+		<script src="src/utils.js"></script>
+
+		<script src="src/main.js"></script>
+
+		<script src="src/MapColor.js"></script>
+
+		<script src="src/material/_Material.js"></script>
+		<script src="src/material/MaterialLiquid.js"></script>
+		<script src="src/material/MaterialLogic.js"></script>
+		<script src="src/material/MaterialPortal.js"></script>
+		<script src="src/material/MaterialTransparent.js"></script>
+		<script src="src/material/MaterialWeb.js"></script>
+		<script src="src/material/Material.js"></script>
+
+		<script src="src/minecraftSimulator.js"></script>
+		<script src="src/World.js"></script>
+		<script src="src/gui_FullApp.js"></script>
+		<script src="src/googleAnalytics.js"></script>
+
+		<script src="src/modelViews/ModelView_Canvas_Default.js"></script>
+		<script src="src/modelViews/ModelView_CanvasTop.js"></script>
+		<script src="src/modelViews/ModelView_CanvasSide.js"></script>
+
+
+		<script src="src/ticker.js"></script>
+		<script src="src/CanvasInterface.js"></script>
+		<script src="src/facing.js"></script>
+		<script src="src/localization.js"></script>
+
+		<script src="src/documentNew.js"></script>
+		<script src="src/documentInfo.js"></script>
+		<script src="src/documentOpen.js"></script>
+		<script src="src/documentSave.js"></script>
+		<script src="src/documentSaveLocally.js"></script>
+		<script src="src/documentResize.js"></script>
+		<script src="src/documentRotate.js"></script>
+		<script src="src/documentDownloadSavedVersion.js"></script>
+
+		<script src="src/urlHistory.js"></script>
+
+		<script src="src/gui/full/multiViewHandler.js"></script>
+		<script src="src/gui/full/guiFull_ticker.js"></script>
+		<script src="src/gui/full/toolbar.js"></script>
+		<script src="src/gui/full/tooltip.js"></script>
+		<script src="src/gui/full/sidebar.js"></script>
+		<script src="src/gui/full/modal.js"></script>
+		<script src="src/gui/full/input.js"></script>
+		<script src="src/gui/full/options.js"></script>
+		<script src="src/gui/full/usermanager.js"></script>
+		<script src="src/gui/full/viewPorts.js"></script>
+		<script src="src/gui/full/submitFeedback.js"></script>
+		<script src="src/gui/full/blockHelper_Sign.js"></script>
+
+
+		<script src="src/tools/tool.js"></script>
+
+		<script src="src/Block.js"></script>
+
+		<script src="src/blocks/_Default.js"></script>
+		<script src="src/blocks/Block.js"></script>
+		<script src="src/blocks/Breakable.js"></script>
+		<script src="src/blocks/Container.js"></script>
+		<script src="src/blocks/Sand.js"></script>
+		<script src="src/blocks/Stone.js"></script>
+		<script src="src/blocks/Torch.js"></script>
+
+		<script src="src/blocks/_Unknown.js"></script>
+		<script src="src/blocks/Air.js"></script>
+		<script src="src/blocks/Bookshelf.js"></script>
+		<script src="src/blocks/Button.js"></script>
+		<script src="src/blocks/Cake.js"></script>
+		<script src="src/blocks/Clay.js"></script>
+		<script src="src/blocks/Cloth.js"></script>
+		<script src="src/blocks/Dirt.js"></script>
+		<script src="src/blocks/Door.js"></script>
+		<script src="src/blocks/Glass.js"></script>
+		<script src="src/blocks/GlowStone.js"></script>
+		<script src="src/blocks/Grass.js"></script>
+		<script src="src/blocks/Gravel.js"></script>
+		<script src="src/blocks/Lever.js"></script>
+		<script src="src/blocks/Log.js"></script>
+		<script src="src/blocks/Netherrack.js"></script>
+		<script src="src/blocks/Obsidian.js"></script>
+		<script src="src/blocks/Ore.js"></script>
+		<script src="src/blocks/OreStorage.js"></script>
+		<script src="src/blocks/PistonBase.js"></script>
+		<script src="src/blocks/PistonExtension.js"></script>
+		<script src="src/blocks/PistonMoving.js"></script>
+		<script src="src/blocks/PressurePlate.js"></script>
+		<script src="src/blocks/Pumpkin.js"></script>
+		<script src="src/blocks/RedstoneOre.js"></script>
+		<script src="src/blocks/RedstoneRepeater.js"></script>
+		<script src="src/blocks/RedstoneTorch.js"></script>
+		<script src="src/blocks/RedstoneWire.js"></script>
+		<script src="src/blocks/SandStone.js"></script>
+		<script src="src/blocks/Sign.js"></script>
+		<script src="src/blocks/Stairs.js"></script>
+		<script src="src/blocks/Step.js"></script>
+		<script src="src/blocks/StoneBrick.js"></script>
+		<script src="src/blocks/Sponge.js"></script>
+		<script src="src/blocks/SoulSand.js"></script>
+
+		<script src="src/tileEntities/_Default.js"></script>
+		<script src="src/tileEntities/_Unknown.js"></script>
+		<script src="src/tileEntities/Piston.js"></script>
+		<script src="src/tileEntities/Sign.js"></script>
+
+		<script src="src/entities/_Default.js"></script>
+		<script src="src/entities/_Unknown.js"></script>
+
+	</head>
+	
+	<body>
+		<div id="header">
+			<span class="title">Mordritch's JavaScript Redstone Simulator<span id="headerDocumentTitle"></span></span>
+		</div>
+		
+		<div id="unsupportedByBrowser">
+			
+			<script>
+				if (!window.HTMLCanvasElement) {
+					//Canvas not supported
+					var noCanvasError = null;
+					var schematicDetails = null;
+					document.write(noCanvasError);
+					document.write(schematicDetails);
+				}
+			</script>
+		</div>
+	</body>
+</html>
