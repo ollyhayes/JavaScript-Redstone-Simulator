@@ -100,13 +100,34 @@
 		var blockMetadata = world.getBlockMetadata(posX, posY, posZ);
 		var ignoreTick = this.ignoreTick(world, posX, posY, posZ, blockMetadata);
 		var repeaterDelay = (blockMetadata & 0xc) >> 2;
-		if (this.isRepeaterPowered && !ignoreTick) {
+
+		if (this.isLocked(world, posX, posY, posZ, blockMetadata)) {
+			return; // don't trigger update if repeater is locked
+		}
+		else if (this.isRepeaterPowered && !ignoreTick) {
 			world.scheduleBlockUpdate(posX, posY, posZ, this.blockID, this.repeaterState[repeaterDelay] * 2);
 		}
 		else if (!this.isRepeaterPowered && ignoreTick) {
 			world.scheduleBlockUpdate(posX, posY, posZ, this.blockID, this.repeaterState[repeaterDelay] * 2);
 		}
 	};
+
+	proto.isLocked = function (world, posX, posY, posZ, blockMetadata) {
+		var repeaterDirection= blockMetadata & 3;
+		var repeaterBlockId = world.Block.redstoneRepeaterActive.blockID;
+		switch (repeaterDirection) {
+			case 3:
+			case 1:
+				return (world.getBlockId(posX, posY, posZ + 1) === repeaterBlockId && world.isBlockProvidingPowerTo(posX, posY, posZ + 1, 3))
+					|| (world.getBlockId(posX, posY, posZ - 1) === repeaterBlockId && world.isBlockProvidingPowerTo(posX, posY, posZ - 1, 2));
+
+			case 0:
+			case 2:
+				return (world.getBlockId(posX + 1, posY, posZ) === repeaterBlockId && world.isBlockProvidingPowerTo(posX + 1, posY, posZ, 5))
+					|| (world.getBlockId(posX - 1, posY, posZ) === repeaterBlockId && world.isBlockProvidingPowerTo(posX - 1, posY, posZ, 4));
+		}
+		return false;
+	}
 	
 	proto.ignoreTick = function (world, posX, posY, posZ, blockMetadata) {
 		var repeaterDirection= blockMetadata & 3;
@@ -283,6 +304,7 @@
 		var poweredColour = "rgb(255,0,0)";
 		var unpoweredColour = "rgb(128,0,0)";
 		var unusedColour = "rgb(192,192,192)";
+		var lockedColour = "rgb(64, 64, 64)";
 		var blockMetaData = world.getBlockMetadata(posX, posY, posZ);
 		
  		/*
@@ -293,6 +315,7 @@
 		0x3: 4 tick delay
 		*/
 		var delay = (blockMetaData >>> 2) + 1;
+		var isLocked = this.isLocked(world, posX, posY, posZ, blockMetaData);
 		
 		var delayColour1 = (this.isRepeaterPowered) ? poweredColour : unpoweredColour;
 		var delayColour2 = (this.isRepeaterPowered) ? poweredColour : unpoweredColour;
@@ -306,6 +329,11 @@
 		if (view == "top") {
 			canvas.save();
 			this.rotateContext(rotated, canvas);
+
+			if (isLocked) {
+				canvas.fillStyle = lockedColour;
+				canvas.fillRect(0, 3, 8, 2);
+			}
 
 			canvas.fillStyle = delayColour1;
 			canvas.fillRect(3, 0, 2, 2);
